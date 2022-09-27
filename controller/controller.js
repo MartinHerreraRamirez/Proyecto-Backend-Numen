@@ -1,23 +1,24 @@
-const {Cat} = require('../models/model')
-const {Dog} = require('../models/dog')
+const {Player} = require('../models/player')
 
-const vistaUno = (req, res)=>{
+const seeOne = (req, res)=>{
     res.render('index', { title: 'Express' });
 }
 
-const vistaGatitos = async (req, res) =>{
-    const gatitos = await Cat.find()
-    res.json({gatitos})
+const seePlayers = async (req, res) =>{
+    const players = await Player.find()
+    res.json({players})
 }
 
-const crearGatito = async (req, res)=>{
+const createPlayer = async (req, res)=>{
     try {
-        const save = new Cat(req.body);
+        const save = new Player(req.body);
         await save.save()
         res.status(201).json(save)
     } catch (error) {
-        res.status(501).json({msg: 'no se pudo guardar el gato ' + error})
+        res.status(501).json({msg: 'no se pudo guardar el jugador ' + error})
     }   
 }
 
-module.exports = {vistaUno, crearGatito, vistaGatitos}
+
+
+module.exports = {seeOne, createPlayer, seePlayers}

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {vistaUno} = require('../controller/controller.js')
+const {seeOne} = require('../controller/controller.js')
 
 /* GET home page. */
-router.get('/', vistaUno);
+router.get('/', seeOne);
 
 module.exports = router;
