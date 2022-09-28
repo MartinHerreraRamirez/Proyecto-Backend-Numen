@@ -18,8 +18,8 @@ const storeSchema = new Schema({
     team: {
         type: String,
         required: false,
-    }
+    },
 });
-const Player = mongoose.model('player', storeSchema); // Cat con mayuscula y en singular
+const Player = mongoose.model('Player', storeSchema); // Player con mayuscula y en singular
 
 module.exports = {Player}
