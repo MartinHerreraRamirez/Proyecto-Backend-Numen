@@ -36,23 +36,32 @@ const createPlayer = async (req, res)=>{
             res.status(501).json(err)
         }       
     } catch (err) {
-        res.status(501).json({msg: 'Could not create player ' + err})
+        res.status(501).json({msg: 'Could not create player', err})
     }   
 }
 
 
-const editPlayer = async (req, res) => {
-    const {id} = req.params
-    const player = req.body
-    await Player.findByIdAndUpdate(id, req.body)
-    res.status(202).json(player)
+const editPlayer = async (req, res) => { 
+    try {
+        const err = validationResult(req)
+        if(err.isEmpty()){
+            const {id} = req.params
+            const newDataPlayer = req.body
+            const oldDataPlayer = await Player.findByIdAndUpdate(id, req.body)
+            res.status(202).json({oldDataPlayer, msg: "The player was edited", newDataPlayer})
+        }else{
+            res.status(501).json(err)
+        }  
+    } catch (err) {
+        res.status(501).json({msg: 'Could not edit the player'})
+    }        
 }
 
 
 const deletePlayer = async (req, res) => {
     try {
         const player = await Player.findByIdAndDelete(req.params.id)
-        res.json({msg: 'The player was deleted', player})        
+        res.status(200).json({msg: 'The player was deleted', player})        
     } catch (err) {
         res.status(400).json({msg: 'Could not delete the player - incorrect ID'})
     }
@@ -69,3 +78,5 @@ const queryAxios = async (req,res) => {
 
 
 module.exports = {seeOne, createPlayer, seePlayers, seeOnePlayer, editPlayer, deletePlayer, queryAxios}
+
+
