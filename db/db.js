@@ -8,9 +8,9 @@ const dbConnection = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         } )
-        console.log('Base de datos conectada');
-    } catch  {        
-        console.log('Error a la hora de iniciar la base de datos')   
+        console.log('Connected Database');
+    } catch (err) {        
+        console.log('Error when starting the database', err)   
     }
 }
 

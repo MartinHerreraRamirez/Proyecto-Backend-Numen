@@ -1,6 +1,7 @@
 const res = require('express/lib/response')
 const {Player} = require('../models/player')
-const {check, validationResult, body} = require('express-validator')
+const {check, validationResult, body} = require('express-validator');
+const axios = require('axios');
 
 
 const seeOne = (req, res) => {
@@ -28,8 +29,8 @@ const createPlayer = async (req, res)=>{
     try {
         const err = validationResult(req)
         if(err.isEmpty()){
-            const {name, surname, shirtNumber, team} = req.body
-            const player = new Player({name, surname, shirtNumber, team});
+            const {data} = req.body
+            const player = new Player(data);
             await player.save()
             res.status(201).json({player, msg:'Great, Player created!'})
         }else{
@@ -43,20 +44,29 @@ const createPlayer = async (req, res)=>{
 
 const editPlayer = async (req, res) => {
     const {id} = req.params
-    const {name, surname, shirtNumber, team} = req.body
+    const {data} = req.body
     await Player.findByIdAndUpdate(id, req.body)
-    res.status(202).json({name, surname, shirtNumber, team})
+    res.status(202).json(data)
 }
 
 
 const deletePlayer = async (req, res) => {
     try {
-        const player = await Player.findByIdAndDelete(req.params.id)
-        res.json({msg: 'The player was deleted', player})        
+        const {data} = await Player.findByIdAndDelete(req.params.id)
+        res.json({msg: 'The player was deleted', data})        
     } catch (err) {
-        res.status(400).json({msg: 'Could not delete the player'})
+        res.status(400).json({msg: 'Could not delete the player - incorrect ID'})
     }
 }
 
 
-module.exports = {seeOne, createPlayer, seePlayers, seeOnePlayer, editPlayer, deletePlayer}
+const queryAxios = async (req,res) => {
+
+    const {data} = await axios.get('http://pokeapi.co/api/v2/pokemon/ditto', { timeout: 10000}).catch((err)=> {
+        res.status(401).json(err)
+    })
+    res.json(data)   
+}
+
+
+module.exports = {seeOne, createPlayer, seePlayers, seeOnePlayer, editPlayer, deletePlayer, queryAxios}
