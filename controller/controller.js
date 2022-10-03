@@ -29,8 +29,8 @@ const createPlayer = async (req, res)=>{
     try {
         const err = validationResult(req)
         if(err.isEmpty()){
-            const {data} = req.body
-            const player = new Player(data);
+            const {name, surname, shirtNumber, team} = req.body
+            const player = new Player({name, surname, shirtNumber, team});
             await player.save()
             res.status(201).json({player, msg:'Great, Player created!'})
         }else{
