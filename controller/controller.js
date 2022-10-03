@@ -29,8 +29,7 @@ const createPlayer = async (req, res)=>{
     try {
         const err = validationResult(req)
         if(err.isEmpty()){
-            const {name, surname, shirtNumber, team} = req.body
-            const player = new Player({name, surname, shirtNumber, team});
+            const player = new Player(req.body);
             await player.save()
             res.status(201).json({player, msg:'Great, Player created!'})
         }else{
@@ -44,16 +43,16 @@ const createPlayer = async (req, res)=>{
 
 const editPlayer = async (req, res) => {
     const {id} = req.params
-    const {data} = req.body
+    const player = req.body
     await Player.findByIdAndUpdate(id, req.body)
-    res.status(202).json(data)
+    res.status(202).json(player)
 }
 
 
 const deletePlayer = async (req, res) => {
     try {
-        const {data} = await Player.findByIdAndDelete(req.params.id)
-        res.json({msg: 'The player was deleted', data})        
+        const player = await Player.findByIdAndDelete(req.params.id)
+        res.json({msg: 'The player was deleted', player})        
     } catch (err) {
         res.status(400).json({msg: 'Could not delete the player - incorrect ID'})
     }
